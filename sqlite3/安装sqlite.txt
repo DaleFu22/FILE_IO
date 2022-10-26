@@ -1,0 +1,105 @@
+安装过程根据不同版本sqlite和系统，安装方式不同，ubuntu1204用户建议用： 方式一
+
+方式一
+===================================================================
+1.拷贝
+      把文件：sqlite-autoconf-3071601.tar.gz   拷贝到ubuntu，解压：tar xvf sqlite-autoconf-3071601.tar.gz
+2.安装
+      2.1 进入目录：sqlite-autoconf-3071601      cd sqlite-autoconf-3071601
+      2.2 依次运行以下命令：
+	./configure
+	make
+	sudo make install
+      以上步骤都成功执行，sqlite3安装成功，可以在命令行下输入：sqlite3 test.db     这个命令用来打开一个数据库文件，成功就可以去操作此数据库，这时候命令行应该是如下样子：
+	xxx@ubuntu:~/work/sqlite/sqlite_demo$ sqlite3 test.db 
+	SQLite version 3.7.16.1 2013-03-29 13:44:34
+	Enter ".help" for instructions
+	Enter SQL statements terminated with a ";"
+	sqlite>
+
+	如果不成功，提示header and source什么的不匹配，执行下面的操作：
+		wen@ubuntu:~/sqlite$ sudo cp /usr/local/lib/libsqlite3.* /usr/lib/i386-linux-gnu/ -a
+		这句命令的意思：拷贝/usr/local/lib/目录下的所有相关库到/usr/lib/i386-linux-gnu/目录下，        记得一定要加 -a
+
+
+成功安装后可以利用sqlite操作数据库：
+
+	xusha@MyUbuntu:~$ touch test.db
+	xusha@MyUbuntu:~$ sqlite3 test.db
+	
+	创建表命令： create table xxx(id int, name varchar(20), price int);
+	插入数据  ： insert into xxx(id, name, price) values(001, '1304', 1000);
+	查询      ： select * from xxx;
+	查询名字为‘1304’的id号：
+		     select id from xxx where name='1304';
+	更新      ： update food set price=1000 where price=100;
+	删除      ： delete from xxx where i=001;
+
+
+更详细操作请参考相关资料文档！
+/******************************到此已经安装完成**************************************/
+
+
+
+
+
+
+
+
+以上步骤成功安装后，在编译加入数据库的代码时要加上链接sqlite的库，编译格式如下：（sqlite_test.c是自己写的测试代码）
+gcc -o sqlite_test sqlite_test.c -lsqlite3
+
+如果要安装操作数据库图形界面，参照方式二的第5步。
+===================================================================
+
+方式二
+===================================================================
+Ubuntu linux下安装sqlite3
+1.介绍：sqlite3是linux上的小巧的数据库，一个文件就是一个数据库。
+
+2.安装：
+要安装sqlite3，可以在终端提示符后运行下列命令:
+sudo apt-get install sqlite3
+检查版本
+sqlite3 -version
+
+3.测试
+当前目录下建立test.db测试数据库文件
+sqlite3 test.db
+查询信息
+.database
+退出
+.exit
+
+4. 安装Sqlite3编译需要的工具包：
+    apt-get install libsqlite3-dev
+
+5.图形界面
+可以选择sqlitebrowser程式（qt3）
+sudo apt-get install sqlitebrowser
+启动图形界面可以在终端提示符后输入sqlitebrowser
+===================================================================
+
+交叉编译：
+sqlite-autoconf-3071601$ CC=arm-none-linux-gnueabi-gcc ./configure --host=arm-none-linux-gnueabi --prefix=/opt/fs210/filesystem/usr/local
+sqlite-autoconf-3071601$ make 
+sqlite-autoconf-3071601$ sudo make install
+出现错误：
+-----------------------
+chmod 644 /opt/fs210/filesystem/usr/share/lib/libsqlite3.a
+arm-none-linux-gnueabi-ranlib /opt/fs210/filesystem/usr/share/lib/libsqlite3.a
+./libtool: line 6619: arm-none-linux-gnueabi-ranlib: command not found
+make[1]: *** [install-libLTLIBRARIES] Error 127
+make[1]: Leaving directory `/home/gree/fs210/myplayer/sqlite3/sqlite-autoconf-3071601'
+make: *** [install-am] Error 2
+-----------------------
+解决办法：用root用户执行：
+gree@ubuntu:~/fs210/myplayer/sqlite3/sqlite-autoconf-3071601$ su
+输入密码： 123456
+root@ubuntu:/home/gree/fs210/myplayer/sqlite3/sqlite-autoconf-3071601# source /etc/profile   （导入交叉工具链环境变量）
+
+重新执行install:
+root@ubuntu:/home/gree/fs210/myplayer/sqlite3/sqlite-autoconf-3071601# make install
+root@ubuntu:/home/gree/fs210/myplayer/sqlite3/sqlite-autoconf-3071601# exit
+exit
+gree@ubuntu:~/fs210/myplayer/sqlite3/sqlite-autoconf-3071601$
