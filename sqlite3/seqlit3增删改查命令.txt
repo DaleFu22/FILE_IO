@@ -1,0 +1,42 @@
+--进入sqlite3
+seqlite3
+
+--退出sqlite3
+当状态是sqlite3>时：
+.exit
+
+当状态是...>时：
+按CTRL+Z可以退出。
+
+--创建表
+create table student (id integer,name text,age integer);
+
+--查看表
+.tables
+
+--查看表结构
+.schema
+
+--插入数据
+insert into student (id,name,age) values(1,"aa",22);
+--或一次性插入多条
+insert into student values(2,"bb",23),(3,"cc",24),(4,"dd",25);
+
+--查询数据
+select * from student;
+
+--修改数据
+update student set age = 69 where id = 4;
+
+--删除数据
+delete from student where id = 1;
+
+--删除表
+drop table student
+
+/**注意：我们使用sqlite3命令直接打开的数据库称之为内存数据库
+		 也就是说我一退出数据库，之前创建的表就消失了
+		 我们如果想让数据库的内容一直存在，就需要用sqlite3 xxxx命令
+		 xxxx表示数据库的名字，比如：sqlite3 student
+**/
+
