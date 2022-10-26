@@ -1,0 +1,1 @@
+About static library production
